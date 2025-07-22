@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ant Strategy Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="controls">
+            <div class="menu-header" onclick="toggleMenu('controls-content')">
+                <h3 style="margin: 0; color: #fff;">⚙️ Ant Behavior Controls</h3>
+                <span class="toggle-icon" id="controls-toggle">▼</span>
+            </div>
+            <div id="controls-content" class="menu-content">
+                <div class="control-group">
+                    <label>Speed: <span id="speedValue">1.0</span></label>
+                    <input type="range" id="speedSlider" min="0.1" max="3.0" step="0.1" value="1.0">
+                </div>
+                
+                <div class="control-group">
+                    <label>Aggression: <span id="aggressionValue">0.5</span></label>
+                    <input type="range" id="aggressionSlider" min="0" max="1" step="0.1" value="0.5">
+                </div>
+                
+                <div class="control-group">
+                    <label>Pheromone Attraction: <span id="pheromoneValue">0.7</span></label>
+                    <input type="range" id="pheromoneSlider" min="0" max="1" step="0.1" value="0.7">
+                </div>
+                
+                <div class="control-group">
+                    <label>Wander Strength: <span id="wanderValue">0.3</span></label>
+                    <input type="range" id="wanderSlider" min="0" max="1" step="0.1" value="0.3">
+                </div>
+                
+                <button id="addFoodBtn">Add Food</button>
+                <button id="addObstacleBtn">Add Obstacle</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+        </div>
+        
+        <div id="recruitment">
+            <div class="menu-header" onclick="toggleMenu('recruitment-content')">
+                <h3 style="margin: 0; color: #fff;">🏭 Colony Recruitment</h3>
+                <span class="toggle-icon" id="recruitment-toggle">▼</span>
+            </div>
+            <div id="recruitment-content" class="menu-content">
+                <div class="colony-section">
+                    <h4 style="color: #ff4444; margin: 10px 0;">Red Colony (Player)</h4>
+                    <div class="colony-resources">
+                        <div>Food Stored: <span id="redColonyFood">50</span></div>
+                    </div>
+                    
+                    <div class="ant-type">
+                        <div class="ant-info">
+                            <span class="ant-name">Worker</span>
+                            <span class="ant-cost">Cost: 5 food</span>
+                        </div>
+                        <div class="ant-stats">HP: 80 | Attack: 5 | Speed: Normal | Can collect food</div>
+                        <button id="recruitWorkerRed" class="recruit-btn">Recruit Worker</button>
+                    </div>
+                    
+                    <div class="ant-type">
+                        <div class="ant-info">
+                            <span class="ant-name">Warrior</span>
+                            <span class="ant-cost">Cost: 15 food</span>
+                        </div>
+                        <div class="ant-stats">HP: 150 | Attack: 20 | Speed: Normal | Can collect food</div>
+                        <button id="recruitWarriorRed" class="recruit-btn">Recruit Warrior</button>
+                    </div>
+                    
+                    <div class="ant-type">
+                        <div class="ant-info">
+                            <span class="ant-name">Scout</span>
+                            <span class="ant-cost">Cost: 8 food</span>
+                        </div>
+                        <div class="ant-stats">HP: 60 | Attack: 3 | Speed: Fast | Explores & reports</div>
+                        <button id="recruitScoutRed" class="recruit-btn">Recruit Scout</button>
+                    </div>
+                    
+                    <div class="ant-type">
+                        <div class="ant-info">
+                            <span class="ant-name">Healer</span>
+                            <span class="ant-cost">Cost: 12 food</span>
+                        </div>
+                        <div class="ant-stats">HP: 100 | Attack: 3 | Speed: Fast | Heals allies</div>
+                        <button id="recruitHealerRed" class="recruit-btn">Recruit Healer</button>
+                    </div>
+                </div>
+                
+                <div class="colony-section">
+                    <h4 style="color: #4444ff; margin: 10px 0;">Blue Colony (AI)</h4>
+                    <div class="colony-resources">
+                        <div>Food Stored: <span id="blueColonyFood">50</span></div>
+                        <div class="ai-status">Strategy: <span id="currentStrategy">Economy</span></div>
+                        <div class="ai-status">Next Action: <span id="nextAction">Recruiting...</span></div>
+                    </div>
+                    
+                    <div class="ant-type">
+                        <div class="ant-info">
+                            <span class="ant-name">Worker</span>
+                            <span class="ant-cost">Cost: 5 food</span>
+                        </div>
+                        <div class="ant-stats">HP: 80 | Attack: 5 | Speed: Normal | Can collect food</div>
+                        <button id="recruitWorkerBlue" class="recruit-btn">Recruit Worker</button>
+                    </div>
+                    
+                    <div class="ant-type">
+                        <div class="ant-info">
+                            <span class="ant-name">Warrior</span>
+                            <span class="ant-cost">Cost: 15 food</span>
+                        </div>
+                        <div class="ant-stats">HP: 150 | Attack: 20 | Speed: Normal | Can collect food</div>
+                        <button id="recruitWarriorBlue" class="recruit-btn">Recruit Warrior</button>
+                    </div>
+                    
+                    <div class="ant-type">
+                        <div class="ant-info">
+                            <span class="ant-name">Healer</span>
+                            <span class="ant-cost">Cost: 12 food</span>
+                        </div>
+                        <div class="ant-stats">HP: 100 | Attack: 3 | Speed: Fast | Heals allies</div>
+                        <button id="recruitHealerBlue" class="recruit-btn">Recruit Healer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="stats">
+            <div>FPS: <span id="fps">0</span></div>
+            <div>Food Sources: <span id="foodCount">0</span></div>
+        </div>
+        
+        <div id="colonyStatus">
+            <div class="colony-status red-colony">
+                <div class="colony-header">🔴 Red Colony (Player)</div>
+                <div class="status-item">Health: <span id="redHealth">500/500</span></div>
+                <div class="status-item">Food: <span id="redFood">50</span></div>
+                <div class="status-item">Units: <span id="redUnits">0</span></div>
+                <div class="unit-breakdown">
+                    <small>W:<span id="redWorkers">0</span> | R:<span id="redWarriors">0</span> | H:<span id="redHealers">0</span></small>
+                </div>
+            </div>
+            
+            <div id="gameStatus">
+                <div id="winMessage" style="display: none;">
+                    <h2 id="winText">Victory!</h2>
+                    <button id="restartBtn">Play Again</button>
+                </div>
+            </div>
+            
+            <div class="colony-status blue-colony">
+                <div class="colony-header">🔵 Blue Colony (AI)</div>
+                <div class="status-item">Health: <span id="blueHealth">500/500</span></div>
+                <div class="status-item">Food: <span id="blueFood">50</span></div>
+                <div class="status-item">Units: <span id="blueUnits">0</span></div>
+                <div class="unit-breakdown">
+                    <small>W:<span id="blueWorkers">0</span> | R:<span id="blueWarriors">0</span> | H:<span id="blueHealers">0</span></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="vector2.js"></script>
+    <script src="ant-base.js"></script>
+    <script src="ant-types.js"></script>
+    <script src="hive.js"></script>
+    <script src="other-entities.js"></script>
+    <script src="ai.js"></script>
+    <script src="game.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
